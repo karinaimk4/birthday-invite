@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Thư Mời Sinh Nhật</title>
+  <link rel="icon" type="image/png" href="https://stickershop.line-scdn.net/stickershop/v1/product/24523360/LINEStorePC/main.png?v=1">
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(to bottom right, #d4f5d0, #ffffff);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+    }
+    .card {
+      background: #f0fff4;
+      border-radius: 20px;
+      box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+      padding: 30px;
+      max-width: 500px;
+      text-align: center;
+      transition: 0.4s ease;
+      animation: fadeIn 0.6s ease;
+    }
+    .card img {
+      width: 100%;
+      border-radius: 15px;
+      margin-bottom: 15px;
+    }
+    .button {
+      background-color: #4caf50;
+      color: white;
+      border: none;
+      padding: 12px 20px;
+      border-radius: 10px;
+      margin: 10px 5px;
+      cursor: pointer;
+      font-size: 1rem;
+    }
+    .button:hover {
+      background-color: #45a049;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: scale(0.95); }
+      to { opacity: 1; transform: scale(1); }
+    }
+    ul {
+      text-align: left;
+      margin-top: 10px;
+    }
+    #fireworks-canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 999;
+}
+  </style>
+</head>
+<body>
+<canvas id="fireworks-canvas"></canvas>
+<div id="app"></div>
+
+<script>
+  const screens = {
+    welcome: `
+      <div class="card">
+        <h1>🎉 Xin chào bông hoa nhỏ dễ thương! 🎂</h1>
+        <p>Bạn được mời đến bữa tiệc sinh nhật cực kỳ đặc biệt! 🥳</p>
+        <button class="button" onclick="navigate('place1')">Tới tăng 1 🌿</button>
+      </div>
+    `,
+    place1: `
+      <div class="card">
+        <img src="https://media-cdn.tripadvisor.com/media/photo-s/1c/af/a9/82/hanuri-korean-food-ho.jpg" alt="Khu vườn thần tiên">
+        <h2>🌼 Place 1: Hanuri Korean Restaurant</h2>
+        <p>Chúng ta sẽ có những món ăn ngol, bánh kem và cay xè xè bên tô mì trộn!</p>
+        <button class="button" onclick="navigate('detail1')">Xem menu trước 🌱</button>
+        <button class="button" onclick="navigate('place2')">Tới tăng 2 🎈</button>
+      </div>
+    `,
+    detail1: `
+      <div class="card">
+        <h2>🌳 Menu Hanuri</h2>
+        <p>Đây là nơi tràn ngập đồ ăn và đồ uống:</p>
+        <ul>
+          <img src="https://lh3.googleusercontent.com/p/AF1QipOu-G09JT_ICctQfumafIQI4Jj4GUOusMuuPkuo=s1360-w1360-h1020-rw" alt="Khu vườn thần tiên">
+          <img src="https://lh3.googleusercontent.com/p/AF1QipMxhjzKQe1o5yOc9KZ8iFvtB1hUaDru1ZUOYUcq=s1360-w1360-h1020-rw" alt="Khu vườn thần tiên">
+          <li>🌸 Hãy chọn trước món mà bạn định ăn nèk</li>
+          <li>🧁 Menu có thể thay đổi tùy theo quán</li>
+          <li>🎈 Nhớ đến đúng giờ để có bàn nhak</li>
+          <li>🐰 Ăn chung chứ hong uống chung nên nhớ kêu nước không cay như fan T1 gáng chịu</li>
+        </ul>
+        <button class="button" onclick="navigate('place1')">🔙 Back to PLace 1</button>
+        <button class="button" onclick="navigate('place2')">Tới tăng 2 🎈</button>
+      </div>
+    `,
+    place2: `
+      <div class="card">
+        <img src="https://lh3.googleusercontent.com/gps-cs-s/AC9h4nqB25uz8MWWl1Xh79APcyYBNQ9FaQ4L09M-dfo0iTcDdT9dyVxYZg-JrD78seBp4xTh7iWWMg9llZMdkYHzKvu8eBRVJUIMjbhTXn1AekcR8G7xI7YvlNZxBtdNaKPAU26LGt8_YQ=w408-h544-k-no" alt="Bữa tiệc vui nhộn">
+        <h2>🎉 Place 2: Hiuling at Danh Trà </h2>
+        <p>Nghe nhạc, đọc sách (trừ giáo trình), tô tranh,... thích làm gì làm miễn bạn vui là được</p>
+        <p style="color: gray;">Avo rất mong được gặp bông hoa nhỏ nhé! 💚</p>
+        <button class="button" onclick="navigate('detail2')">Xem menu nước 🌱</button>
+
+      </div>
+    `
+    ,
+    
+    detail2: `
+      <div class="card">
+        <h2>🌳 Menu Danh Trà</h2>
+        <p>Đây là nơi tụi mình hiuling</p>
+        <ul>
+        <iframe src="https://danhtra.com/menu" 
+        width="100%" 
+        height="600px" 
+        style="border: none; border-radius: 10px;">
+</iframe>  
+<div style="text-align: center;">
+  <button class="button" onclick="navigate('thankyou')">Xác nhận tham dự 🎈</button>
+</div>
+        </ul>
+      </div>
+    `
+    ,
+    thankyou: `
+  <div class="card">
+    <h1>🎉 Cảm ơn bạn đã xác nhận! 💚</h1>
+    <p>Chúng ta sẽ có một buổi sinh nhật thật vui vẻ và đáng nhớ cùng nhau! 🥳</p>
+    <p style="color: gray;">Đừng quên mang theo nụ cười và bụng đói nhé 😋</p>
+    <h3 style="margin-top: 30px;">⏳ Còn lại:</h3>
+    <div id="countdown" style="font-size: 1.5rem; font-weight: bold; color: #388e3c;"></div>
+  </div>
+`
+  };
+
+  function navigate(screen) {
+    document.getElementById('app').innerHTML = screens[screen];
+  }
+
+  navigate('welcome'); // Start
+  // Fireworks simple
+const canvas = document.getElementById('fireworks-canvas');
+const ctx = canvas.getContext('2d');
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
+const particles = [];
+
+function createFirework(x, y) {
+  const count = 30;
+  for (let i = 0; i < count; i++) {
+    particles.push({
+      x: x,
+      y: y,
+      radius: Math.random() * 2 + 1,
+      color: `hsl(${Math.random() * 360}, 100%, 70%)`,
+      angle: Math.random() * 2 * Math.PI,
+      speed: Math.random() * 5 + 2,
+      alpha: 1,
+    });
+  }
+}
+
+function animateFireworks() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  particles.forEach((p, index) => {
+    p.x += Math.cos(p.angle) * p.speed;
+    p.y += Math.sin(p.angle) * p.speed;
+    p.alpha -= 0.02;
+    if (p.alpha <= 0) particles.splice(index, 1);
+    else {
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(${hexToRgb(p.color)}, ${p.alpha})`;
+      ctx.fill();
+    }
+  });
+  requestAnimationFrame(animateFireworks);
+}
+
+function hexToRgb(h) {
+  const temp = document.createElement("div");
+  temp.style.color = h;
+  document.body.appendChild(temp);
+  const cs = getComputedStyle(temp).color;
+  document.body.removeChild(temp);
+  return cs.match(/\d+, \d+, \d+/)[0];
+}
+
+// Gọi pháo hoa khi trang load
+setTimeout(() => {
+  for (let i = 0; i < 5; i++) {
+    setTimeout(() => {
+      createFirework(Math.random() * canvas.width, Math.random() * canvas.height / 2);
+    }, i * 500);
+  }
+}, 500);
+
+animateFireworks();
+// dô nè
+  // ... (screens, navigate ở trên)
+
+  function startCountdown() {
+    const countdownEl = document.getElementById("countdown");
+    if (!countdownEl) return;
+
+    const targetDate = new Date("2025-05-25T09:00:00").getTime();
+
+    const timer = setInterval(function () {
+      const now = new Date().getTime();
+      const distance = targetDate - now;
+
+      if (distance <= 0) {
+        clearInterval(timer);
+        countdownEl.innerText = "🎊 Đã tới giờ party rồi nèee!";
+        return;
+      }
+
+      const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+      countdownEl.innerText = 
+        days + " ngày " + 
+        hours + "h " + 
+        minutes + "m " + 
+        seconds + "s";
+    }, 1000);
+  }
+
+  // Sửa navigate() để gọi countdown
+  function navigate(screen) {
+    document.getElementById('app').innerHTML = screens[screen];
+    if (screen === 'thankyou') {
+      startCountdown();
+    }
+  }
+
+  // Khởi động
+  navigate('welcome');
+</script>
+
+</body>
+</html>
